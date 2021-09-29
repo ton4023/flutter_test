@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:flutter_test_hy/cubit/user_cubit.dart';
-import 'package:flutter_test_hy/repository/user_repository.dart';
+import '/cubit/user_cubit.dart';
+import '/pages/home_page.dart';
+import '/repository/user_repository.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -13,6 +13,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final _formKey = GlobalKey<FormState>();
   final _userRepository = UserRepository();
   final editText = false;
   final coruses = ['coruse1', 'coruse2', 'coruse3'];
@@ -20,12 +21,12 @@ class _RegisterPageState extends State<RegisterPage> {
   final nationals = ['Thai', 'Chinese', 'England'];
   final national = '';
   final birth = '';
+  final gender = '';
   //Field
   final _fistnameController = TextEditingController();
   final _lastnameController = TextEditingController();
   final _emailController = TextEditingController();
   final _mobileController = TextEditingController();
-  final _genderController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordontroller = TextEditingController();
@@ -45,24 +46,25 @@ class _RegisterPageState extends State<RegisterPage> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Form(
+                    key: _formKey,
                     child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _fistnameField(),
-                    _lastnameField(),
-                    _usernameField(),
-                    _passwordField(),
-                    _confirmPasswordField(),
-                    _emailField(),
-                    _genderField(),
-                    _mobileField(),
-                    _birthField(),
-                    _coruseField(),
-                    _nationalityField(),
-                    _imageField(),
-                    _registerButton(),
-                  ],
-                )),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _fistnameField(),
+                        _lastnameField(),
+                        _usernameField(),
+                        _passwordField(),
+                        _confirmPasswordField(),
+                        _emailField(),
+                        _genderField(),
+                        _mobileField(),
+                        _birthField(),
+                        _coruseField(),
+                        _nationalityField(),
+                        _imageField(),
+                        _registerButton(),
+                      ],
+                    )),
               ),
             ),
           ),
@@ -74,98 +76,124 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _fistnameField() {
     return TextFormField(
       controller: _fistnameController,
-      decoration:
-          InputDecoration(icon: Icon(Icons.person), labelText: 'Please enter yours first name'),
+      decoration: InputDecoration(
+          icon: Icon(Icons.person), labelText: 'Please enter yours first name'),
     );
   }
 
   Widget _lastnameField() {
     return TextFormField(
       controller: _lastnameController,
-      decoration:
-          InputDecoration(icon: Icon(Icons.person), labelText: 'Please enter yours last name'),
+      decoration: InputDecoration(
+          icon: Icon(Icons.person), labelText: 'Please enter yours last name'),
     );
   }
 
   Widget _usernameField() {
     return TextFormField(
       controller: _usernameController,
-      decoration:
-          InputDecoration(icon: Icon(Icons.person), labelText: 'Please enter yours your name'),
+      decoration: InputDecoration(
+          icon: Icon(Icons.person), labelText: 'Please enter yours your name'),
     );
   }
 
   Widget _passwordField() {
     return TextFormField(
-      validator: (_passwordController) {
-        if (!passValid(_passwordController!)) {
-          print('Password Valid');
+      obscureText: true,
+      validator: (val) {
+        if (val!.isEmpty) {
+          return 'Password Empty';
+        } else if (!passValid(val)) {
+          print(!passValid(val));
+          return 'Password Type Error';
         }
+        return null;
       },
       controller: _passwordController,
-      decoration:
-          InputDecoration(icon: Icon(Icons.person), labelText: 'Please enter 8 charactor (A-Z,0-9)'),
+      decoration: InputDecoration(
+          icon: Icon(Icons.person),
+          labelText: 'Please enter password 8 charactor (A-Z,0-9)'),
     );
   }
 
   Widget _confirmPasswordField() {
     return TextFormField(
+      validator: (val) {
+        if (val!.isEmpty) {
+          return 'Password Empty';
+        } else if (val != _passwordController.text) {
+          return 'Password Not Match';
+        }
+        return null;
+      },
+      obscureText: true,
       controller: _confirmPasswordontroller,
       decoration: InputDecoration(
-          icon: Icon(Icons.person), labelText: 'Please enter 8 charactor (A-Z,0-9)'),
+          icon: Icon(Icons.person),
+          labelText: 'Please enter password 8 charactor (A-Z,0-9)'),
     );
   }
 
   Widget _genderField() {
-    return TextFormField(
-      controller: _genderController,
-      decoration: InputDecoration(
-          icon: Icon(Icons.personal_injury), labelText: 'Gender'),
+    return Row(
+      children: [
+        Icon(Icons.attribution),
+        SizedBox(
+          width: 10,
+        ),
+        Radio(
+          value: gender,
+          groupValue: gender,
+          onChanged: (value) {
+            setState(() {
+              print(value);
+              value = gender;
+            });
+          },
+        ),
+        Text('Man'),
+        SizedBox(
+          width: 10,
+        ),
+        Radio(
+          value: gender,
+          groupValue: gender,
+          onChanged: (value) {
+            setState(() {
+              print(value);
+              value = gender;
+            });
+          },
+        ),
+        Text('Woman'),
+      ],
     );
   }
 
   Widget _emailField() {
     return TextFormField(
-      validator: (_emailController) {
-        if (emailValid(_emailController!)) {
-          print('Email Valid');
-        }
+      validator: (val) {
+        emailValid(val!);
       },
       controller: _emailController,
-      decoration: InputDecoration(icon: Icon(Icons.email), labelText: 'Example@email.com'),
+      decoration: InputDecoration(
+          icon: Icon(Icons.email), labelText: 'Example@email.com'),
     );
   }
 
   Widget _birthField() {
-    return Row(
-      children: [
-        Icon(Icons.date_range),
-        Text('Date of birth'),
-        TextButton(
-        onPressed: () {
-            DatePicker.showDatePicker(context,
-                                  showTitleActions: true,
-                                  minTime: DateTime(2018, 3, 5),
-                                  maxTime: DateTime(2019, 6, 7), onChanged: (date) {
-                                    date= birth as DateTime;
-                                print('change $date');
-                              }, onConfirm: (date) {
-                                print('confirm $date');
-                              }, currentTime: DateTime.now(), locale: LocaleType.th);
-        },
-        child: Text(
-            'Please select date of birth',
-            style: TextStyle(color: Colors.blue),
-        )),
-      ],
-    );
+    return Row();
   }
 
   Widget _mobileField() {
     return TextFormField(
       controller: _mobileController,
-      decoration: InputDecoration(icon: Icon(Icons.phone), labelText: '(99) 999-99-99'),
-      inputFormatters: [MaskTextInputFormatter(mask: '(###) ###-##-##', filter: { "#": RegExp(r'[0-9]') })],
+      decoration:
+          InputDecoration(icon: Icon(Icons.phone), labelText: '(999) 999-9999'),
+      inputFormatters: [
+        MaskTextInputFormatter(
+            mask: '(###) ###-####', filter: {"#": RegExp(r'[0-9]')})
+      ],
     );
   }
 
@@ -241,6 +269,10 @@ class _RegisterPageState extends State<RegisterPage> {
     return BlocBuilder<UserCubit, UserState>(builder: (context, state) {
       return ElevatedButton(
         onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => HomePage()));
+          }
           // {firstname,
           // lastname,
           // username,
@@ -251,31 +283,31 @@ class _RegisterPageState extends State<RegisterPage> {
           // birth,
           // nationality,
           // course}
-          if (_passwordController.text == _confirmPasswordontroller.text) {
-            String fistname = _fistnameController.text;
-            String lastname = _lastnameController.text;
-            String username = _usernameController.text;
-            String password = _passwordController.text;
-            String email = _emailController.text;
-            String gender = _genderController.text;
-            String mobile = _mobileController.text;
-            String birth = this.birth;
-            String national = this.national;
-            String coruse = this.coruse;
+          // if (_passwordController.text == _confirmPasswordontroller.text) {
+          //   String fistname = _fistnameController.text;
+          //   String lastname = _lastnameController.text;
+          //   String username = _usernameController.text;
+          //   String password = _passwordController.text;
+          //   String email = _emailController.text;
+          //   String gender = this.gender;
+          //   String mobile = _mobileController.text;
+          //   String birth = this.birth;
+          //   String national = this.national;
+          //   String coruse = this.coruse;
 
-            context.read<UserCubit>().createUser(
-                  fistname,
-                  lastname,
-                  username,
-                  password,
-                  email,
-                  gender,
-                  mobile,
-                  birth,
-                  national,
-                  coruse,
-                );
-          }
+          //   context.read<UserCubit>().createUser(
+          //         fistname,
+          //         lastname,
+          //         username,
+          //         password,
+          //         email,
+          //         gender,
+          //         mobile,
+          //         birth,
+          //         national,
+          //         coruse,
+          //       );
+          //}
         },
         child: Text('Register Button'),
       );
@@ -290,8 +322,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   bool passValid(String value) {
-    String pattern =
-        r"^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$";
+    String pattern = r"^[A-Za-z0-9]{8}";
     RegExp regRxp = RegExp(pattern);
     return regRxp.hasMatch(value);
   }

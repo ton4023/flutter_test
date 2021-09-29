@@ -18,6 +18,14 @@ class UserLoaded extends UserState {
   List<Object> get props => [users];
 }
 
+class UserFiltered extends UserState {
+  final List<User> users;
+
+  UserFiltered({required this.users});
+  @override
+  List<Object> get props => [users];
+}
+
 class UserSelected extends UserState {
   final User user;
   UserSelected({required this.user});

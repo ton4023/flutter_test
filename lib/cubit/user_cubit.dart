@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_test_hy/models/users.dart';
-import 'package:flutter_test_hy/repository/user_repository.dart';
+import '/models/users.dart';
+import '/repository/user_repository.dart';
 
 part 'user_state.dart';
 
@@ -22,6 +22,10 @@ class UserCubit extends Cubit<UserState> {
   void selectUser(String id) async {
     final user = await userRepository.selectData(id);
     emit(UserSelected(user: user));
+  }
+
+  void filterUser(user) async {
+    emit(UserFiltered(users: user));
   }
 
   void createUser(
