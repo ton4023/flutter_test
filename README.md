@@ -2,5 +2,6 @@
 
 ## Example Screen
 <div>
-<img src="https://github.com/ton4023/flutter_covid_report/blob/main/lib/screenshort/src.gif" width="350" alt="image">
+ <p>Main Page</p>
+<img src="https://github.com/ton4023/flutter_test/blob/main/lib/sc/Selection_001.png" width="350" alt="image">
 </div>
