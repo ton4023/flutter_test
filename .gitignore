@@ -29,8 +29,20 @@
 .packages
 .pub-cache/
 .pub/
-/build/
+/build/fluttertoast
+/build/kotlin/sessions
+/build/app/generated
+/build/app/intermediates
+/build/app/kotlin
+/build/app/reports/
+/build/app/tmp
 
+/build/app/outputs/flutter-apk
+/build/app/outputs/logs
+/build/app/outputs/mapping
+/build/app/outputs/sdk-dependencies
+/build/app/outputs/reports
+/build/app/outputs/tmp
 # Web related
 lib/generated_plugin_registrant.dart
 
