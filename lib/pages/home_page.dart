@@ -41,10 +41,13 @@ class _HomePageState extends State<HomePage> {
           if (state is UserLoaded) {
             filteredUsers = state.users;
             List<User> _users = state.users;
-            return ListView.builder(
-                itemCount: _users.length,
-                itemBuilder: (context, index) =>
-                    CardWidget(state: _users[index]));
+            return RefreshIndicator(
+              onRefresh: _refreshData,
+              child: ListView.builder(
+                  itemCount: _users.length,
+                  itemBuilder: (context, index) =>
+                      CardWidget(state: _users[index])),
+            );
           }
           if (state is UserFiltered) {
             return ListView.builder(
@@ -52,11 +55,13 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) =>
                     CardWidget(state: filteredUsers[index]));
           }
-          return Container();
+          return Center(child: CircularProgressIndicator(),);
         },
       ),
     );
   }
+
+  
 
   _buildSearchField() {
     return TextField(
@@ -102,4 +107,13 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
+
+  Future _refreshData() async {
+      context.read<UserCubit>().getUser();
+      print("refresh data");
+  }
+  
 }
+
+
