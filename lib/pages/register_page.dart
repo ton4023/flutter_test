@@ -111,6 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               textColor: Colors.white,
                               fontSize: 16.0);
                           print(_formKey.currentState!.value);
+                           _formKey.currentState!.reset();
                         } else {
                           Fluttertoast.showToast(
                               msg: "password not match",
