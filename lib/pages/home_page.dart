@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final userRepository = UserRepository();
-  // late List<User> users;
   late List<User> filteredUsers;
   bool _isSearching = false;
   final _searchQueryController = TextEditingController();
@@ -64,7 +63,7 @@ class _HomePageState extends State<HomePage> {
         controller: _searchQueryController,
         autofocus: true,
         decoration: InputDecoration(
-          hintText: "Search Username,Firstname,Lastname...",
+          hintText: "Search Username...",
           border: InputBorder.none,
           hintStyle: TextStyle(color: Colors.white30),
         ),
@@ -73,12 +72,6 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             filteredUsers = filteredUsers
                 .where((item) => (
-                    // item.firstname
-                    //     .toLowerCase()
-                    //     .contains(query.toLowerCase()) ||
-                    // item.lastname
-                    //     .toLowerCase()
-                    //     .contains(query.toLowerCase()) ||
                     item.username.toLowerCase().contains(query.toLowerCase())))
                 .toList();
             context.read<UserCubit>().filterUser(filteredUsers);
@@ -106,7 +99,6 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           _isSearching = !_isSearching;
         });
-        print('_isSearching is $_isSearching');
       },
     );
   }
